@@ -10,7 +10,7 @@ from app.config import get_secret_key
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme =OAuth2PasswordBearer(tokenUrl="api/users/token")
+oauth2_scheme =OAuth2PasswordBearer(tokenUrl="api/users/token", auto_error=False)
 
 SECRET_KEY = get_secret_key()
 ALGORITHM = "HS256"

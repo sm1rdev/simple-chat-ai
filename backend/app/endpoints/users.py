@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, HTTPException, Response, Depends, Cookie
+from fastapi import APIRouter, HTTPException, Response, Depends, Cookie, Security
 from fastapi.security import OAuth2PasswordRequestForm
 
 from sqlalchemy import select
@@ -15,10 +15,9 @@ from app.schemas import UserRead, UserWrite, UserUpdate
 
 router = APIRouter(prefix="/users")
 
-async def get_current_user(token: str | None = Depends(oauth2_scheme), access_token: str | None = Cookie(default=None), session: AsyncSession = Depends(get_async_session)):
+async def get_current_user(token: str | None = Security(oauth2_scheme), access_token: str | None = Cookie(default=None), session: AsyncSession = Depends(get_async_session)):
     if token == "undefined":
         token = None
-
     token = token or access_token
     if not token:
         raise credentials_exception

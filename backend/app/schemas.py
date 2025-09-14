@@ -22,3 +22,30 @@ class UserUpdate(User):
     nickname: str | None = None
     email: EmailStr | None = None
     role: str | None = None
+
+class Chat(BaseModel):
+    name: str
+
+class ChatRead(Chat):
+    id: int
+    user_id: int
+
+class ChatWrite(Chat):
+    pass
+
+class ChatUpdate(Chat):
+    name: str | None = None
+
+class Message(BaseModel):
+    data: str
+
+class MessageRead(Message):
+    id: int
+    chat_id: int
+    from_user: str
+
+class MessageWrite(Message):
+    from_user: str
+
+class MessageUpdate(Message):
+    pass

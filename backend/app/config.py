@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     DB_USER: str
     DB_PASSWORD: str
     SECRET_KEY: str
+    OPEN_AI_API_KEY: str
     model_config = SettingsConfigDict(
         env_file=os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".env")
     )
@@ -22,3 +23,6 @@ def get_db_url():
 
 def get_secret_key():
     return settings.SECRET_KEY
+
+def get_open_ai_api_key():
+    return settings.OPEN_AI_API_KEY

@@ -1,7 +1,7 @@
 from datetime import datetime
-from sqlalchemy import func, String
+from sqlalchemy import ForeignKey, func, String
 from sqlalchemy.ext.asyncio import AsyncAttrs
-from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
+from sqlalchemy.orm import Mapped, DeclarativeBase, relationship, mapped_column
 
 
 class Base(AsyncAttrs, DeclarativeBase):
@@ -25,3 +25,31 @@ class User(Base):
     role: Mapped[str] = mapped_column(default="user")
     password: Mapped[str]
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+
+    chats: Mapped[list["Chat"]] = relationship(
+        back_populates="user", cascade="all, delete-orphan"
+    )
+
+class Chat(Base):
+    __tablename__ = "chats"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(default="New Chat")
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+
+    user: Mapped["User"] = relationship(back_populates="chats")
+
+    messages: Mapped[list["Message"]] = relationship(
+        back_populates="chat", cascade="all, delete-orphan"
+    )
+
+class Message(Base):
+    __tablename__ = "messages"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    chat_id: Mapped[int] = mapped_column(ForeignKey("chats.id"))
+    data: Mapped[str]
+    from_user: Mapped[str]
+
+    chat: Mapped["Chat"] = relationship(back_populates="messages")
